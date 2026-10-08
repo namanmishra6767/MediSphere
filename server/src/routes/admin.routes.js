@@ -1,6 +1,9 @@
 import { Router } from "express";
 
-import { getUsers } from "../controllers/admin.controller.js";
+import {
+  createDoctorAccount,
+  getUsers,
+} from "../controllers/admin.controller.js";
 import { requireAuth } from "../middleware/auth.middleware.js";
 import { requireRole } from "../middleware/role.middleware.js";
 
@@ -11,6 +14,13 @@ router.get(
   requireAuth,
   requireRole("admin"),
   getUsers
+);
+
+router.post(
+  "/doctors",
+  requireAuth,
+  requireRole("admin"),
+  createDoctorAccount
 );
 
 export default router;

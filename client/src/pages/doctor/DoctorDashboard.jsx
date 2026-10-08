@@ -100,11 +100,34 @@ function DoctorDashboard() {
     (appointment) => appointment.status === "completed"
   );
 
-  const uniquePatients = new Set(
-    appointments.map((appointment) => appointment.patient_id)
-  ).size;
+const uniquePatients = new Set(
+  appointments.map((appointment) => appointment.patient_id)
+).size;
 
-  const currentHour = new Date().getHours();
+const today = new Date();
+
+const todaysAppointments = appointments.filter((appointment) => {
+  const appointmentDate = new Date(appointment.appointment_time);
+
+  return (
+    appointmentDate.getFullYear() === today.getFullYear() &&
+    appointmentDate.getMonth() === today.getMonth() &&
+    appointmentDate.getDate() === today.getDate()
+  );
+});
+
+const upcomingAppointments = appointments
+  .filter(
+    (appointment) =>
+      appointment.status === "scheduled" &&
+      new Date(appointment.appointment_time) >= today
+  )
+  .sort(
+    (a, b) =>
+      new Date(a.appointment_time) - new Date(b.appointment_time)
+  );
+
+const currentHour = today.getHours();
 
   const greeting =
     currentHour < 12
@@ -142,7 +165,7 @@ function DoctorDashboard() {
       </section>
 
       {/* Summary Cards */}
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-start justify-between">
             <div>
@@ -198,22 +221,76 @@ function DoctorDashboard() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500">
-                Patients
-              </p>
+  <div className="flex items-start justify-between">
+    <div>
+      <p className="text-sm font-medium text-slate-500">
+        Patients
+      </p>
 
-              <p className="mt-2 text-3xl font-bold text-slate-900">
-                {uniquePatients}
-              </p>
-            </div>
+      <p className="mt-2 text-3xl font-bold text-slate-900">
+        {uniquePatients}
+      </p>
+    </div>
 
-            <div className="rounded-xl bg-violet-50 p-3 text-violet-600">
-              <UserRound size={20} />
-            </div>
-          </div>
-        </div>
+    <div className="rounded-xl bg-violet-50 p-3 text-violet-600">
+      <UserRound size={20} />
+    </div>
+  </div>
+</div>
+
+<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+  <div className="flex items-start justify-between">
+    <div>
+      <p className="text-sm font-medium text-slate-500">
+        Today
+      </p>
+
+      <p className="mt-2 text-3xl font-bold text-slate-900">
+        {todaysAppointments.length}
+      </p>
+    </div>
+
+    <div className="rounded-xl bg-cyan-50 p-3 text-cyan-600">
+      <CalendarDays size={20} />
+    </div>
+  </div>
+</div>
+
+<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+  <div className="flex items-start justify-between">
+    <div>
+      <p className="text-sm font-medium text-slate-500">
+        Upcoming
+      </p>
+
+      <p className="mt-2 text-3xl font-bold text-slate-900">
+        {upcomingAppointments.length}
+      </p>
+    </div>
+
+    <div className="rounded-xl bg-indigo-50 p-3 text-indigo-600">
+      <Clock3 size={20} />
+    </div>
+  </div>
+</div>
+
+<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+  <div className="flex items-start justify-between">
+    <div>
+      <p className="text-sm font-medium text-slate-500">
+        Upcoming
+      </p>
+
+      <p className="mt-2 text-3xl font-bold text-slate-900">
+        {upcomingAppointments.length}
+      </p>
+    </div>
+
+    <div className="rounded-xl bg-indigo-50 p-3 text-indigo-600">
+      <Clock3 size={20} />
+    </div>
+  </div>
+</div>
       </section>
 
       {/* Appointments */}
@@ -265,7 +342,7 @@ function DoctorDashboard() {
           !error &&
           appointments.length > 0 && (
             <div className="mt-4 space-y-3">
-              {appointments.map((appointment) => (
+              {upcomingAppointments.slice(0, 5).map((appointment) => (
                 <article
                   key={appointment.id}
                   className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"

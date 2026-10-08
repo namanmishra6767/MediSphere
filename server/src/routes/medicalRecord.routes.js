@@ -17,6 +17,7 @@ router.post(
   "/",
   requireAuth,
   requireRole("doctor"),
+  medicalRecordMutationLimiter,
   createRecord
 );
 
@@ -38,6 +39,7 @@ router.patch(
   "/:id",
   requireAuth,
   requireRole("doctor"),
+  medicalRecordMutationLimiter,
   updateRecord
 );
 
