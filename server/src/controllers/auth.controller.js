@@ -9,7 +9,7 @@ const registerSchema = z
   .object({
     email: z.string().email(),
     password: z.string().min(8),
-    role: z.enum(["patient", "doctor"]),
+    role: z.enum(["patient"]),
     firstName: z.string().trim().min(1).max(100),
     lastName: z.string().trim().min(1).max(100),
     dateOfBirth: z.string().optional(),
@@ -17,13 +17,13 @@ const registerSchema = z
   })
   .strict()
   .superRefine((data, ctx) => {
-    if (data.role === "patient" && !data.dateOfBirth) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["dateOfBirth"],
-        message: "Date of birth is required for patients",
-      });
-    }
+  if (!data.dateOfBirth) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["dateOfBirth"],
+      message: "Date of birth is required",
+    });
+  }
 
     if (data.role === "doctor" && !data.specialization) {
       ctx.addIssue({
