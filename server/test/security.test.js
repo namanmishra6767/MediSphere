@@ -43,3 +43,36 @@ test("POST /api/auth/register rejects public doctor registration", async () => {
 
   assert.equal(response.status, 400);
 });
+const allowedOrigin =
+  process.env.CLIENT_URL || "http://localhost:5173";
+
+test("POST rejects requests from an untrusted origin", async () => {
+  const response = await request(app)
+    .post("/api/auth/logout")
+    .set("Origin", "https://attacker.example");
+
+  assert.equal(response.status, 403);
+});
+
+test("POST allows the configured origin to reach authentication", async () => {
+  const response = await request(app)
+    .post("/api/auth/logout")
+    .set("Origin", allowedOrigin);
+
+  assert.equal(response.status, 401);
+});
+
+test("POST without an origin reaches authentication", async () => {
+  const response = await request(app)
+    .post("/api/auth/logout");
+
+  assert.equal(response.status, 401);
+});
+
+test("POST rejects cross-site requests without an origin", async () => {
+  const response = await request(app)
+    .post("/api/auth/logout")
+    .set("Sec-Fetch-Site", "cross-site");
+
+  assert.equal(response.status, 403);
+});

@@ -10,6 +10,7 @@ import auditRoutes from "./routes/audit.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import adminAppointmentRoutes from "./routes/adminAppointment.routes.js";
 import { authLoginLimiter } from "./middleware/rateLimit.middleware.js";
+import { verifyRequestOrigin } from "./middleware/origin.middleware.js";
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use(
 
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
-app.use("/api/appointments", appointmentRoutes);
+app.use(verifyRequestOrigin);
 app.use("/api/auth/login", authLoginLimiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/doctors", doctorRoutes);
