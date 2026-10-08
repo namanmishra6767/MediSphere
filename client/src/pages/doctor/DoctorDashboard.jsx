@@ -342,7 +342,7 @@ const currentHour = today.getHours();
           !error &&
           appointments.length > 0 && (
             <div className="mt-4 space-y-3">
-              {upcomingAppointments.slice(0, 5).map((appointment) => (
+              {appointments.map((appointment) => (
                 <article
                   key={appointment.id}
                   className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
