@@ -155,7 +155,15 @@ function Login() {
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
-
+            <div className="mt-6 text-center text-sm text-slate-500">
+  Don't have an account?{" "}
+  <a
+    href="/register"
+    className="font-medium text-blue-600 hover:text-blue-700"
+  >
+    Create one
+  </a>
+</div>
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
             <LockKeyhole size={14} />
             <span>Your connection is protected</span>

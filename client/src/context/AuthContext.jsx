@@ -36,6 +36,15 @@ export const AuthProvider = ({ children }) => {
     return data.user;
   };
 
+  const register = async (registrationData) => {
+  const data = await apiRequest("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(registrationData),
+  });
+
+  return data;
+};
+
   const logout = async () => {
     try {
       await apiRequest("/auth/logout", {
@@ -52,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         login,
+        register,
         logout,
         checkAuth,
       }}
