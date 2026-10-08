@@ -15,9 +15,11 @@ const app = express();
 
 app.use(helmet());
 
+const allowedOrigin = process.env.CLIENT_URL || "http://localhost:5173";
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigin,
     credentials: true,
   })
 );
